@@ -12,24 +12,61 @@ parameters:
   - Staging
   - Production
 
+
+pool:
+  vmImage: 'windows-2022'
+
+
+parameters:
+- name : Environment
+  displayName: Environment to deploy to.
+  type: string
+  default: Dev
+  values:
+  - Development
+  - Staging
+  - Production
+
 steps:
-- task: azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
-  displayName: 'Use Terraform latest'
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
-  displayName: 'Terraform : INIT'
+- task: TerraformTaskV4@0
+  displayName: 'Install Terraform'
   inputs:
-    backendServiceArm: 'Jonnychipz-TFSPN'
-    backendAzureRmResourceGroupName: 'jonnychipz-infra'
-    backendAzureRmStorageAccountName: jonnychipztstate
-    backendAzureRmContainerName: tstate
-    backendAzureRmKey: '77Q4LUB5o9wRdbPYDt+0kGZP+L8Sj9E/FNXg7lZBQS5z3mLod5cyan4wA19CR1SmlqIRUFQfhuQrPVaGzNhjGw=='
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
-  displayName: 'Terraform : PLAN'
+    terraformVersion: 'latest'
+
+- checkout: self
+  displayName: 'Checkout repository'
+
+- task: TerraformTaskV4@1
+  displayName: 'Terraform Init'
   inputs:
-    command: plan
-    environmentServiceNameAzureRM: 'Jonnychipz-TFSPN'
-- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
-  displayName: 'Terraform : VAL & APPLY'
+    command: 'init'
+    workingDirectory: '$(Build.SourcesDirectory)'
+    backendType: 'azurerm'
+    ensureBackend: true
+    backendServiceArm: 'ARMConnection'
+    resourceGroupName: 'terraformazdorg'
+    storageAccountName: 'terraformazdosa'
+    containerName: 'terraformazdocont'
+    key: 'tf/terraform.tfstate'
+
+- task: TerraformTaskV4@3
+  displayName: 'Terraform Validate'
   inputs:
-    command: apply
-    environmentServiceNameAzureRM: 'Jonnychipz-TFSPN'
+    command: 'validate'
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+- task:TerraformTaskV4@3
+  displayName: 'Terraform Plan'
+  inputs:
+    command: 'plan'
+    workingDirectory: '$(Build.SourcesDirectory)'
+    environmentServiceName: 'ARMConnection'
+    commandOptions: '-out=tfplan'
+
+- task:TerraformTaskV4@3
+  displayName: 'Terraform Apply'
+  inputs:
+    command: 'apply'
+    workingDirectory: '$(Build.SourcesDirectory)'
+    environmentServiceName: 'ARMConnection'
+    commandOptions: '-auto-approve -input=false tfplan'
