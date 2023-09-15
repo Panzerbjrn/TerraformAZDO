@@ -50,7 +50,7 @@ steps:
     command: 'validate'
     workingDirectory: '$(Build.SourcesDirectory)'
 
-- task:TerraformTaskV4@3
+- task: TerraformTaskV4@3
   displayName: 'Terraform Plan'
   inputs:
     command: 'plan'
@@ -58,7 +58,7 @@ steps:
     environmentServiceName: $(ServiceConnectionName)
     commandOptions: '-out=tfplan'
 
-- task:TerraformTaskV4@3
+- task: TerraformTaskV4@3
   displayName: 'Terraform Apply'
   inputs:
     command: 'apply'
