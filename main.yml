@@ -1,6 +1,11 @@
+trigger:
+    batch: true
+    branches:
+      include:
+      - main
+  
 pool:
   vmImage: 'windows-2022'
-
 
 parameters:
 - name : Environment
@@ -13,28 +18,18 @@ parameters:
   - Production
 
 
-pool:
-  vmImage: 'windows-2022'
-
-
-parameters:
-- name : Environment
-  displayName: Environment to deploy to.
-  type: string
-  default: Dev
-  values:
-  - Development
-  - Staging
-  - Production
+variables:
+- group: GlobalVariables
+- name: DeploymentDefaultLocation
+  value: 'westeurope'
+- name: ServiceConnectionName
+  value: 'ARMConnection'
 
 steps:
 - task: TerraformTaskV4@0
   displayName: 'Install Terraform'
   inputs:
     terraformVersion: 'latest'
-
-- checkout: self
-  displayName: 'Checkout repository'
 
 - task: TerraformTaskV4@1
   displayName: 'Terraform Init'
@@ -43,7 +38,7 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)'
     backendType: 'azurerm'
     ensureBackend: true
-    backendServiceArm: 'ARMConnection'
+    backendServiceArm: $(ServiceConnectionName)
     resourceGroupName: 'terraformazdorg'
     storageAccountName: 'terraformazdosa'
     containerName: 'terraformazdocont'
@@ -60,7 +55,7 @@ steps:
   inputs:
     command: 'plan'
     workingDirectory: '$(Build.SourcesDirectory)'
-    environmentServiceName: 'ARMConnection'
+    environmentServiceName: $(ServiceConnectionName)
     commandOptions: '-out=tfplan'
 
 - task:TerraformTaskV4@3
@@ -68,5 +63,5 @@ steps:
   inputs:
     command: 'apply'
     workingDirectory: '$(Build.SourcesDirectory)'
-    environmentServiceName: 'ARMConnection'
+    environmentServiceName: $(ServiceConnectionName)
     commandOptions: '-auto-approve -input=false tfplan'

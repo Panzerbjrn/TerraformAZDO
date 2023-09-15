@@ -21,3 +21,4 @@ resource "azurerm_resource_group" "resoucegroup" {
   name     = "TerraformAZDO"
   location = var.location
 }
+
