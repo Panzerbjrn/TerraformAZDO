@@ -1,0 +1,14 @@
+pool:
+  vmImage: 'windows-2022'
+
+
+parameters:
+- name : Environment
+  displayName: Environment to deploy to.
+  type: string
+  default: Dev
+  values:
+  - Development
+  - Staging
+  - Production
+
