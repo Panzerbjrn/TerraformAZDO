@@ -70,7 +70,7 @@ stages:
         command: init
         backendType: azurerm
         workingDirectory: $( TerraformDirectory )
-        backendServiceArm: $( AzureSubscriptionServiceConnectionName )
+        backendServiceArm: $(ServiceConnectionName)
         backendAzureRmResourceGroupName: $( TerraformStateStorageAccountResourceGroupName )
         backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
         backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
@@ -80,6 +80,6 @@ stages:
       inputs:
         command: plan
         workingDirectory: $( TerraformDirectory )
-        publishPlanResults: $( AzureSubscriptionServiceConnectionName )
-        environmentServiceName: $( AzureSubscriptionServiceConnectionName )
+        publishPlanResults: $(ServiceConnectionName)
+        environmentServiceName: $(ServiceConnectionName)
         commandOptions: ${{ parameters.commandOptions }}
