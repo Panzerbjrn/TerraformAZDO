@@ -48,7 +48,7 @@ stages:
         echo TerraformDirectory $(TerraformDirectory)
         echo AzureSubscriptionServiceConnectionName $(AzureSubscriptionServiceConnectionName)
         echo TerraformStateStorageAccountResourceGroupName $(TerraformStateStorageAccountResourceGroupName)
-        echo TerraformStateStorageAccountName lower($(TerraformStateStorageAccountName))
+        echo TerraformStateStorageAccountName ${{lower($(TerraformStateStorageAccountName))}}
         echo TerraformStateStorageAccountContainerName $(TerraformStateStorageAccountContainerName)
       displayName: 'echo Variables'
     - script: |
