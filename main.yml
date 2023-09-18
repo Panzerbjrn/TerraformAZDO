@@ -23,7 +23,7 @@ variables:
 - name: ServiceConnectionName
   value: 'ARMConnection'
 - name: TerraformDirectory
-  value: ${{ parameters.Environment }}
+  value: "${{ parameters.Environment }}-dir"
 - name: AzureSubscriptionServiceConnectionName
   value: $(ServiceConnectionName)
 - name: TerraformStateStorageAccountResourceGroupName
@@ -45,27 +45,12 @@ stages:
         echo Buildnumber $(Build.BuildNumber)
         echo ServiceConnectionName $(ServiceConnectionName)
         echo DeploymentDefaultLocation $(DeploymentDefaultLocation)
+        echo TerraformDirectory $(TerraformDirectory)
+        echo AzureSubscriptionServiceConnectionName $(AzureSubscriptionServiceConnectionName)
+        echo TerraformStateStorageAccountResourceGroupName $(TerraformStateStorageAccountResourceGroupName)
+        echo TerraformStateStorageAccountName $(TerraformStateStorageAccountName)
+        echo TerraformStateStorageAccountContainerName $(TerraformStateStorageAccountContainerName)
       displayName: 'echo Variables'
     - script: |
         echo Environment ${{ parameters.Environment }}
       displayName: 'echo Parameters'
-- stage: Stage2
-  displayName: "Stage 2"
-  jobs:
-  - job:
-    steps:
-    - task: TerraformInstaller@0
-      displayName: Terraform Install
-      inputs:
-        terraformVersion: 1.5.6
-    - task: TerraformCLI@0
-      displayName: 'Terraform : init'
-      inputs:
-        command: init
-        backendType: azurerm
-        workingDirectory: $( TerraformDirectory )
-        backendServiceArm: $( AzureSubscriptionServiceConnectionName )
-        backendAzureRmResourceGroupName: $( TerraformStateStorageAccountResourceGroupName )
-        backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
-        backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
-        backendAzureRmKey: ${{ parameters.Environment }}.tfstate
