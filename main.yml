@@ -63,9 +63,9 @@ stages:
       inputs:
         command: init
         backendType: azurerm
-        workingDirectory: ${{ parameters.TerraformDirectory }}
-        backendServiceArm: ${{ parameters.AzureSubscriptionServiceConnectionName }}
-        backendAzureRmResourceGroupName: ${{ parameters.TerraformStateStorageAccountResourceGroupName }}
-        backendAzureRmStorageAccountName: ${{ parameters.TerraformStateStorageAccountName }}
-        backendAzureRmContainerName: ${{ parameters.TerraformStateStorageAccountContainerName }}
-        backendAzureRmKey: ${{ parameters.Environment }}.tfstate
+        workingDirectory: ${{ TerraformDirectory }}
+        backendServiceArm: ${{ AzureSubscriptionServiceConnectionName }}
+        backendAzureRmResourceGroupName: ${{ TerraformStateStorageAccountResourceGroupName }}
+        backendAzureRmStorageAccountName: ${{ TerraformStateStorageAccountName }}
+        backendAzureRmContainerName: ${{ TerraformStateStorageAccountContainerName }}
+        backendAzureRmKey: ${{ Environment }}.tfstate
