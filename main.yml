@@ -16,12 +16,24 @@ parameters:
   - Dev
   - Stg
   - Prd
-
+  
 variables:
 - name: DeploymentDefaultLocation
   value: 'westeurope'
 - name: ServiceConnectionName
   value: 'ARMConnection'
+- name: serviceName
+  type: string
+- name: TerraformDirectory
+  value: ${{ parameters.Environment }}
+- name: AzureSubscriptionServiceConnectionName
+  value: $(ServiceConnectionName)
+- name: TerraformStateStorageAccountResourceGroupName
+  value: "TFAZDO-${{ parameters.Environment }}-rg"
+- name: TerraformStateStorageAccountName
+  value: "TFAZDO-${{ parameters.Environment }}-sa"
+- name: TerraformStateStorageAccountContainerName
+  value: "TFAZDO-${{ parameters.Environment }}-cont"
 
 stages:
 - stage: Stage1
@@ -49,13 +61,13 @@ stages:
       inputs:
         terraformVersion: 1.5.6
     - task: TerraformCLI@0
-        displayName: 'Terraform : init'
-        inputs:
-          command: init
-          backendType: azurerm
-          workingDirectory: ${{ parameters.Environment }}
-          backendServiceArm: $(ServiceConnectionName)
-          backendAzureRmResourceGroupName: "TFAZDO-${{ parameters.Environment }}-rg"
-          backendAzureRmStorageAccountName: "TFAZDO-${{ parameters.Environment }}-sa"
-          backendAzureRmContainerName: "TFAZDO-${{ parameters.Environment }}-cont"
-          backendAzureRmKey: ${{ parameters.Environment }}.tfstate
+      displayName: 'Terraform : init'
+      inputs:
+        command: init
+        backendType: azurerm
+        workingDirectory: ${{ parameters.TerraformDirectory }}
+        backendServiceArm: ${{ parameters.AzureSubscriptionServiceConnectionName }}
+        backendAzureRmResourceGroupName: ${{ parameters.TerraformStateStorageAccountResourceGroupName }}
+        backendAzureRmStorageAccountName: ${{ parameters.TerraformStateStorageAccountName }}
+        backendAzureRmContainerName: ${{ parameters.TerraformStateStorageAccountContainerName }}
+        backendAzureRmKey: ${{ parameters.Environment }}.tfstate
