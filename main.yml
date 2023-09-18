@@ -5,15 +5,20 @@ trigger:
     - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-2022'
 
 parameters:
-- name: someString
+- name : Environment
+  displayName: Environment to deploy.
   type: string
-  default: "HELLO"    
+  default: Dev
+  values:
+  - Dev
+  - Stg
+  - Prd
 
 variables:
-   A: ${{ lower(parameters.someString) }}
+   lowerEnvironment: ${{ lower(parameters.Environment) }}
 
 steps:
-  - script: echo $(A) # outputs hello
+  - script: echo $(lowerEnvironment) # outputs hello
