@@ -20,7 +20,7 @@ parameters:
 variables:
   lowerEnvironment: ${{ lower(parameters.Environment) }}
   DeploymentDefaultLocation: 'westeurope'
-  ServiceConnectionName: $(ServiceConnectionName)
+  ServiceConnectionName: 'ARMConnection'
   TerraformDirectory: "${{ parameters.Environment }}-dir"
   AzureSubscriptionServiceConnectionName: $(ServiceConnectionName)
   TerraformStateStorageAccountResourceGroupName: "TFAZDO-${{ parameters.Environment }}-rg"
