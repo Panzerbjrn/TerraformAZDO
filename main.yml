@@ -19,13 +19,14 @@ parameters:
 
 variables:
   lowerEnvironment: ${{ lower(parameters.Environment) }}
+  Prefix: ${{ lower(TFAZDO) }}
   DeploymentDefaultLocation: 'westeurope'
   ServiceConnectionName: 'ARMConnection'
   TerraformDirectory: "${{ parameters.Environment }}-dir"
   AzureSubscriptionServiceConnectionName: $(ServiceConnectionName)
-  TerraformStateStorageAccountResourceGroupName: "TFAZDO-${{ parameters.Environment }}-rg"
-  TerraformStateStorageAccountName: "TFAZDO-${{ parameters.Environment }}-sa"
-  TerraformStateStorageAccountContainerName: "TFAZDO-${{ parameters.Environment }}-cont"
+  TerraformStateStorageAccountResourceGroupName: "$(Prefix)-${{ parameters.Environment }}-rg"
+  TerraformStateStorageAccountName: "$(Prefix)-${{ parameters.Environment }}-sa"
+  TerraformStateStorageAccountContainerName: "$(Prefix)-${{ parameters.Environment }}-cont"
 
 stages:
 - stage: Stage1
