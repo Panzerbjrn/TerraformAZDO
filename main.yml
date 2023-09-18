@@ -16,7 +16,12 @@ parameters:
   - Dev
   - Stg
   - Prd
-
+- name: commandOptions
+  default: '-out=$(System.DefaultWorkingDirectory)/terraform.tfplan -detailed-exitcode'
+- name: additionalParameters
+  type: object
+  default: []
+  
 variables:
   lowerEnvironment: ${{ lower(parameters.Environment) }}
   Prefix: ${{ lower('TFAZDO') }}
@@ -70,3 +75,11 @@ stages:
         backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
         backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
         backendAzureRmKey: ${{ parameters.Environment }}.tfstate
+    - task: TerraformCLI@0
+      displayName: 'Terraform : plan'
+      inputs:
+        command: plan
+        workingDirectory: $( TerraformDirectory )
+        publishPlanResults: $( AzureSubscriptionServiceConnectionName )
+        environmentServiceName: $( AzureSubscriptionServiceConnectionName )
+        commandOptions: ${{ parameters.commandOptions }}
