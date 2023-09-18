@@ -32,8 +32,10 @@ variables:
   value: "TFAZDO-${{ parameters.Environment }}-sa"
 - name: TerraformStateStorageAccountContainerName
   value: "TFAZDO-${{ parameters.Environment }}-cont"
-A: ${{ lower(parameters.environment) }}
-B: ${{ lower($(ServiceConnectionName)) }}
+- name: LowerA
+  value: ${{ lower(parameters.environment) }}
+- name: LowerB
+  value: ${{ lower($(ServiceConnectionName)) }}
 
 
 stages:
