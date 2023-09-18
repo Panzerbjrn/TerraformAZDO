@@ -38,7 +38,6 @@ stages:
       displayName: 'echo Variables'
     - script: |
         echo Environment ${{ parameters.Environment }}
-        echo environment ${{ parameters.environment }}
       displayName: 'echo Parameters'
 - stage: Stage2
   displayName: "Stage 2"
@@ -49,3 +48,14 @@ stages:
       displayName: Terraform Install
       inputs:
         terraformVersion: 1.5.6
+    - task: TerraformCLI@0
+        displayName: 'Terraform : init'
+        inputs:
+          command: init
+          backendType: azurerm
+          workingDirectory: ${{ parameters.Environment }}
+          backendServiceArm: $(ServiceConnectionName)
+          backendAzureRmResourceGroupName: "TFAZDO-${{ parameters.Environment }}-rg"
+          backendAzureRmStorageAccountName: "TFAZDO-${{ parameters.Environment }}-sa"
+          backendAzureRmContainerName: "TFAZDO-${{ parameters.Environment }}-cont"
+          backendAzureRmKey: ${{ parameters.Environment }}.tfstate
