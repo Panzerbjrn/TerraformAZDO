@@ -66,6 +66,7 @@ stages:
         terraformVersion: 1.5.6
     - task: TerraformCLI@1
       displayName: 'Terraform : init'
+      continueOnError: true 
       inputs:
         command: init
         backendType: azurerm
