@@ -5,7 +5,7 @@ trigger:
     - main
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'Ubuntu-latest'
 
 parameters:
 - name: someString
