@@ -11,7 +11,7 @@ parameters:
 - name : Environment
   displayName: Environment to deploy to.
   type: string
-  default:   - Development
+  default: - Development
   values:
   - Development
   - Staging
