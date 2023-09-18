@@ -5,7 +5,7 @@ trigger:
     - main
 
 pool:
-  vmImage: 'Ubuntu-latest'
+  vmImage: ubuntu-latest
 
 parameters:
 - name: someString
@@ -16,4 +16,4 @@ variables:
    A: ${{ lower(parameters.someString) }}
 
 steps:
-  - script: echo $A # outputs hello
+  - script: echo $(A) # outputs hello
