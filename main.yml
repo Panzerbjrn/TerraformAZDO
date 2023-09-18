@@ -20,8 +20,6 @@ parameters:
 variables:
 - name: DeploymentDefaultLocation
   value: 'westeurope'
-- name: ResourceGroupName
-  value: "${{ parameters.CustomerID }}-RG"
 - name: ServiceConnectionName
   value: 'ARMConnection'
 
