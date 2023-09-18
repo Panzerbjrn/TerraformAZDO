@@ -29,7 +29,7 @@ variables:
 - name: TerraformStateStorageAccountResourceGroupName
   value: "TFAZDO-${{ parameters.Environment }}-rg"
 - name: TerraformStateStorageAccountName
-  value: !Sub "TFAZDO-${{ parameters.Environment }}-sa"
+  value: "TFAZDO-${{ parameters.Environment }}-sa"
 - name: TerraformStateStorageAccountContainerName
   value: "TFAZDO-${{ parameters.Environment }}-cont"
 
@@ -48,7 +48,7 @@ stages:
         echo TerraformDirectory $(TerraformDirectory)
         echo AzureSubscriptionServiceConnectionName $(AzureSubscriptionServiceConnectionName)
         echo TerraformStateStorageAccountResourceGroupName $(TerraformStateStorageAccountResourceGroupName)
-        echo TerraformStateStorageAccountName $(TerraformStateStorageAccountName)
+        echo TerraformStateStorageAccountName lower($(TerraformStateStorageAccountName))
         echo TerraformStateStorageAccountContainerName $(TerraformStateStorageAccountContainerName)
       displayName: 'echo Variables'
     - script: |
