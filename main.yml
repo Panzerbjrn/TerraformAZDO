@@ -11,16 +11,11 @@ parameters:
 - name : Environment
   displayName: Environment to deploy.
   type: string
-  default: Trial
+  default: Dev
   values:
-  - Trial
-  - Small
-  - Medium
-  - Large
-- name : CustomerID
-  displayName: Customer ID of the client.
-  type: string
-  default: '0008'
+  - Dev
+  - Stg
+  - Prd
 
 variables:
 - name: DeploymentDefaultLocation
@@ -46,5 +41,4 @@ stages:
     - script: |
         echo Environment ${{ parameters.Environment }}
         echo environment ${{ parameters.environment }}
-        echo CustomerID ${{ parameters.CustomerID }}
       displayName: 'echo Parameters'
