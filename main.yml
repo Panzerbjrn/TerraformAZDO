@@ -18,7 +18,34 @@ parameters:
   - Prd
 
 variables:
-   lowerEnvironment: ${{ lower(parameters.Environment) }}
+  lowerEnvironment: ${{ lower(parameters.Environment) }}
+  DeploymentDefaultLocation: 'westeurope'
+  ServiceConnectionName: $(ServiceConnectionName)
+  TerraformDirectory: "${{ parameters.Environment }}-dir"
+  AzureSubscriptionServiceConnectionName: $(ServiceConnectionName)
+  TerraformStateStorageAccountResourceGroupName: "TFAZDO-${{ parameters.Environment }}-rg"
+  TerraformStateStorageAccountName: "TFAZDO-${{ parameters.Environment }}-sa"
+  TerraformStateStorageAccountContainerName: "TFAZDO-${{ parameters.Environment }}-cont"
 
-steps:
-  - script: echo $(lowerEnvironment) # outputs hello
+stages:
+- stage: Stage1
+  displayName: "Stage 1"
+  jobs:
+  - job:
+    steps:
+    - script: echo Hello world!
+      displayName: 'echo Hello world!'
+    - script: |
+        echo lowerEnvironment $(lowerEnvironment)
+        echo Buildnumber $(Build.BuildNumber)
+        echo ServiceConnectionName $(ServiceConnectionName)
+        echo DeploymentDefaultLocation $(DeploymentDefaultLocation)
+        echo TerraformDirectory $(TerraformDirectory)
+        echo AzureSubscriptionServiceConnectionName $(AzureSubscriptionServiceConnectionName)
+        echo TerraformStateStorageAccountResourceGroupName $(TerraformStateStorageAccountResourceGroupName)
+        echo TerraformStateStorageAccountName $(TerraformStateStorageAccountName)
+        echo TerraformStateStorageAccountContainerName $(TerraformStateStorageAccountContainerName)
+      displayName: 'echo Variables'
+    - script: |
+        echo Environment ${{ parameters.Environment }}
+      displayName: 'echo Parameters'
