@@ -65,7 +65,23 @@ stages:
       inputs:
         terraformVersion: '1.5.6'
         terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
-
-    - script: |
-        terraform init
-      displayName: 'Terraform Plan'
+    - task: TerraformCLI@1
+      displayName: 'Terraform : init'
+      continueOnError: true 
+      inputs:
+        command: init
+        backendType: azurerm
+        workingDirectory: $( TerraformDirectory )
+        backendServiceArm: $(ServiceConnectionName)
+        backendAzureRmResourceGroupName: $( TerraformStateStorageAccountResourceGroupName )
+        backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
+        backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
+        backendAzureRmKey: ${{ parameters.Environment }}.tfstate
+    - task: TerraformCLI@1
+      displayName: 'Terraform : plan'
+      inputs:
+        command: plan
+        workingDirectory: $( TerraformDirectory )
+        publishPlanResults: $(ServiceConnectionName)
+        environmentServiceName: $(ServiceConnectionName)
+        commandOptions: ${{ parameters.commandOptions }}
