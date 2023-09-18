@@ -60,7 +60,7 @@ stages:
   jobs:
   - job:
     steps:
-    - task:  ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller
+    - task:  ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
       displayName: Terraform Install
       inputs:
         terraformVersion: 1.5.6
