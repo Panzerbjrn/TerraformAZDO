@@ -26,10 +26,10 @@ variables:
   value: 'ARMConnection'
 
 steps:
-- task: TerraformTaskV4@0
-  displayName: 'Install Terraform'
+- task: TerraformInstaller
+  displayName: install terraform
   inputs:
-    terraformVersion: 'latest'
+    terraformVersion: 1.5.6
 
 - task: TerraformTaskV4@0
   displayName: 'Terraform Init'
