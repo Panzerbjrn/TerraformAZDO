@@ -29,9 +29,12 @@ variables:
 - name: TerraformStateStorageAccountResourceGroupName
   value: "TFAZDO-${{ parameters.Environment }}-rg"
 - name: TerraformStateStorageAccountName
-  value: ${{ lower("TFAZDO-${{ parameters.Environment }}-sa") }}
+  value: "TFAZDO-${{ parameters.Environment }}-sa"
 - name: TerraformStateStorageAccountContainerName
   value: "TFAZDO-${{ parameters.Environment }}-cont"
+- A: ${{ lower(parameters.environment) }}
+- B: ${{ lower($(ServiceConnectionName)) }}
+
 
 stages:
 - stage: Stage1
@@ -54,23 +57,3 @@ stages:
     - script: |
         echo Environment ${{ parameters.Environment }}
       displayName: 'echo Parameters'
-- stage: Stage2
-  displayName: "Stage 2"
-  jobs:
-  - job:
-    steps:
-    - task: TerraformInstaller@0
-      displayName: Terraform Install
-      inputs:
-        terraformVersion: 1.5.6
-    - task: TerraformCLI@0
-      displayName: 'Terraform : init'
-      inputs:
-        command: init
-        backendType: azurerm
-        workingDirectory: $( TerraformDirectory )
-        backendServiceArm: $( AzureSubscriptionServiceConnectionName )
-        backendAzureRmResourceGroupName: $( TerraformStateStorageAccountResourceGroupName )
-        backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
-        backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
-        backendAzureRmKey: ${{ parameters.Environment }}.tfstate
