@@ -22,11 +22,11 @@ variables:
   Prefix: ${{ lower('TFAZDO') }}
   DeploymentDefaultLocation: 'westeurope'
   ServiceConnectionName: 'ARMConnection'
-  TerraformDirectory: "${{ parameters.Environment }}-dir"
+  TerraformDirectory: "${{ lower(parameters.Environment) }}-dir"
   AzureSubscriptionServiceConnectionName: $(ServiceConnectionName)
-  TerraformStateStorageAccountResourceGroupName: "$(Prefix)-${{ parameters.Environment }}-rg"
-  TerraformStateStorageAccountName: "$(Prefix)-${{ parameters.Environment }}-sa"
-  TerraformStateStorageAccountContainerName: "$(Prefix)-${{ parameters.Environment }}-cont"
+  TerraformStateStorageAccountResourceGroupName: "$(Prefix)-${{ lower(parameters.Environment) }}-rg"
+  TerraformStateStorageAccountName: "$(Prefix)-${{ lower(parameters.Environment) }}-sa"
+  TerraformStateStorageAccountContainerName: "$(Prefix)-${{ lower(parameters.Environment) }}-cont"
 
 stages:
 - stage: Stage1
@@ -48,5 +48,5 @@ stages:
         echo TerraformStateStorageAccountContainerName $(TerraformStateStorageAccountContainerName)
       displayName: 'echo Variables'
     - script: |
-        echo Environment ${{ parameters.Environment }}
+        echo Environment ${{ lower(parameters.Environment) }}
       displayName: 'echo Parameters'
