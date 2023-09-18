@@ -8,54 +8,12 @@ pool:
   vmImage: 'windows-2022'
 
 parameters:
-- name : Environment
-  displayName: Environment to deploy.
+- name: someString
   type: string
-  default: Dev
-  values:
-  - Dev
-  - Stg
-  - Prd
-  
+  default: "HELLO"    
+
 variables:
-- name: DeploymentDefaultLocation
-  value: 'westeurope'
-- name: ServiceConnectionName
-  value: 'ARMConnection'
-- name: TerraformDirectory
-  value: "${{ parameters.Environment }}-dir"
-- name: AzureSubscriptionServiceConnectionName
-  value: $(ServiceConnectionName)
-- name: TerraformStateStorageAccountResourceGroupName
-  value: "TFAZDO-${{ parameters.Environment }}-rg"
-- name: TerraformStateStorageAccountName
-  value: "TFAZDO-${{ parameters.Environment }}-sa"
-- name: TerraformStateStorageAccountContainerName
-  value: "TFAZDO-${{ parameters.Environment }}-cont"
-- name: LowerA
-  value: ${{ lower(parameters.environment) }}
-- name: LowerB
-  value: ${{ lower(ServiceConnectionName) }}
+   A: ${{ lower(parameters.someString) }}
 
-
-stages:
-- stage: Stage1
-  displayName: "Stage 1"
-  jobs:
-  - job:
-    steps:
-    - script: echo Hello world!
-      displayName: 'echo Hello world!'
-    - script: |
-        echo Buildnumber $(Build.BuildNumber)
-        echo ServiceConnectionName $(ServiceConnectionName)
-        echo DeploymentDefaultLocation $(DeploymentDefaultLocation)
-        echo TerraformDirectory $(TerraformDirectory)
-        echo AzureSubscriptionServiceConnectionName $(AzureSubscriptionServiceConnectionName)
-        echo TerraformStateStorageAccountResourceGroupName $(TerraformStateStorageAccountResourceGroupName)
-        echo TerraformStateStorageAccountName $(TerraformStateStorageAccountName)
-        echo TerraformStateStorageAccountContainerName $(TerraformStateStorageAccountContainerName)
-      displayName: 'echo Variables'
-    - script: |
-        echo Environment ${{ parameters.Environment }}
-      displayName: 'echo Parameters'
+steps:
+  - script: echo $A # outputs hello
