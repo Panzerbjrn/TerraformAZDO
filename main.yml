@@ -1,13 +1,50 @@
 trigger:
-    batch: true
-    branches:
-      include:
-      - main
-  
-pool:
-  vmImage: 'windows-2022'
+  batch: true
+  branches:
+    include:
+    - main
 
-- task: TerraformCLI@0
-  displayName: 'check terraform version'
-  inputs:
-    command: version
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+- name : Environment
+  displayName: Environment to deploy.
+  type: string
+  default: Trial
+  values:
+  - Trial
+  - Small
+  - Medium
+  - Large
+- name : CustomerID
+  displayName: Customer ID of the client.
+  type: string
+  default: '0008'
+
+variables:
+- name: DeploymentDefaultLocation
+  value: 'westeurope'
+- name: ResourceGroupName
+  value: "${{ parameters.CustomerID }}-RG"
+- name: ServiceConnectionName
+  value: 'ARMConnection'
+
+stages:
+- stage: Stage1
+  displayName: "Stage 1"
+  jobs:
+  - job:
+    steps:
+    - script: echo Hello world!
+      displayName: 'echo Hello world!'
+    - script: |
+        echo Buildnumber $(Build.BuildNumber)
+        echo ServiceConnectionName $(ServiceConnectionName)
+        echo DeploymentDefaultLocation $(DeploymentDefaultLocation)
+      displayName: 'echo Variables'
+    - script: |
+        echo Environment ${{ parameters.Environment }}
+        echo environment ${{ parameters.environment }}
+        echo CustomerID ${{ parameters.CustomerID }}
+      displayName: 'echo Parameters'
