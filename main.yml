@@ -19,7 +19,7 @@ parameters:
 
 variables:
   lowerEnvironment: ${{ lower(parameters.Environment) }}
-  Prefix: ${{ lower(TFAZDO) }}
+  Prefix: ${{ lower('TFAZDO') }}
   DeploymentDefaultLocation: 'westeurope'
   ServiceConnectionName: 'ARMConnection'
   TerraformDirectory: "${{ parameters.Environment }}-dir"
