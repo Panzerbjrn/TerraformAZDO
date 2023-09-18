@@ -1,4 +1,4 @@
-name: "Terraform Plan"
+name: "Terraform Test"
 
 trigger:
   branches:
@@ -6,7 +6,7 @@ trigger:
       - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 steps:
 
