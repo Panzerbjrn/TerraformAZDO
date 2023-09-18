@@ -29,7 +29,7 @@ variables:
 - name: TerraformStateStorageAccountResourceGroupName
   value: "TFAZDO-${{ parameters.Environment }}-rg"
 - name: TerraformStateStorageAccountName
-  value: "TFAZDO-${{ parameters.Environment }}-sa"
+  value: !Sub "TFAZDO-${{ parameters.Environment }}-sa"
 - name: TerraformStateStorageAccountContainerName
   value: "TFAZDO-${{ parameters.Environment }}-cont"
 
