@@ -60,27 +60,12 @@ stages:
   jobs:
   - job:
     steps:
-    - task:  ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-      displayName: Terraform Install
+    - task: TerraformInstaller@0
+      displayName: "Install Terraform"
       inputs:
-        terraformVersion: 1.5.6
-    - task: TerraformCLI@1
-      displayName: 'Terraform : init'
-      continueOnError: true 
-      inputs:
-        command: init
-        backendType: azurerm
-        workingDirectory: $( TerraformDirectory )
-        backendServiceArm: $(ServiceConnectionName)
-        backendAzureRmResourceGroupName: $( TerraformStateStorageAccountResourceGroupName )
-        backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
-        backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
-        backendAzureRmKey: ${{ parameters.Environment }}.tfstate
-    - task: TerraformCLI@1
-      displayName: 'Terraform : plan'
-      inputs:
-        command: plan
-        workingDirectory: $( TerraformDirectory )
-        publishPlanResults: $(ServiceConnectionName)
-        environmentServiceName: $(ServiceConnectionName)
-        commandOptions: ${{ parameters.commandOptions }}
+        terraformVersion: '1.5.6'
+        terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
+
+    - script: |
+        terraform init
+      displayName: 'Terraform Plan'
