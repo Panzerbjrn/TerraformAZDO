@@ -70,4 +70,3 @@ stages:
         backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
         backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
         backendAzureRmKey: ${{ parameters.Environment }}.tfstate
-
