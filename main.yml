@@ -40,3 +40,12 @@ stages:
         echo Environment ${{ parameters.Environment }}
         echo environment ${{ parameters.environment }}
       displayName: 'echo Parameters'
+- stage: Stage2
+  displayName: "Stage 2"
+  jobs:
+  - job:
+    steps:
+    - task: TerraformInstaller@0
+      displayName: Terraform Install
+      inputs:
+        terraformVersion: 1.5.6
