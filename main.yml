@@ -1,87 +1,22 @@
+name: "Terraform Plan"
+
 trigger:
-  batch: true
   branches:
     include:
-    - main
+      - main
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'ubuntu-latest'
 
-parameters:
-- name : Environment
-  displayName: Environment to deploy.
-  type: string
-  default: Dev
-  values:
-  - Dev
-  - Stg
-  - Prd
-- name: commandOptions
-  default: '-out=$(System.DefaultWorkingDirectory)/terraform.tfplan -detailed-exitcode'
-- name: additionalParameters
-  type: object
-  default: []
+steps:
 
-variables:
-  lowerEnvironment: ${{ lower(parameters.Environment) }}
-  Prefix: ${{ lower('TFAZDO') }}
-  DeploymentDefaultLocation: 'westeurope'
-  ServiceConnectionName: 'ARMConnection'
-  TerraformDirectory: "${{ lower(parameters.Environment) }}-dir"
-  AzureSubscriptionServiceConnectionName: $(ServiceConnectionName)
-  TerraformStateStorageAccountResourceGroupName: "$(Prefix)-${{ lower(parameters.Environment) }}-rg"
-  TerraformStateStorageAccountName: "$(Prefix)-${{ lower(parameters.Environment) }}-sa"
-  TerraformStateStorageAccountContainerName: "$(Prefix)-${{ lower(parameters.Environment) }}-cont"
+- task: TerraformInstaller@0
+  displayName: "Install Terraform"
+  inputs:
+    terraformVersion: '1.3.9'
+    terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
 
-stages:
-- stage: Stage1
-  displayName: "Stage 1"
-  jobs:
-  - job:
-    steps:
-    - script: echo Hello world!
-      displayName: 'echo Hello world!'
-    - script: |
-        echo lowerEnvironment $(lowerEnvironment)
-        echo Buildnumber $(Build.BuildNumber)
-        echo ServiceConnectionName $(ServiceConnectionName)
-        echo DeploymentDefaultLocation $(DeploymentDefaultLocation)
-        echo TerraformDirectory $(TerraformDirectory)
-        echo AzureSubscriptionServiceConnectionName $(AzureSubscriptionServiceConnectionName)
-        echo TerraformStateStorageAccountResourceGroupName $(TerraformStateStorageAccountResourceGroupName)
-        echo TerraformStateStorageAccountName $(TerraformStateStorageAccountName)
-        echo TerraformStateStorageAccountContainerName $(TerraformStateStorageAccountContainerName)
-      displayName: 'echo Variables'
-    - script: |
-        echo Environment ${{ lower(parameters.Environment) }}
-      displayName: 'echo Parameters'
-- stage: Stage2
-  displayName: "Stage 2"
-  jobs:
-  - job:
-    steps:
-    - task:  ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-      displayName: "Install Terraform"
-      inputs:
-        terraformVersion: '1.5.6'
-        terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
-    - task: TerraformCLI@1
-      displayName: 'Terraform : init'
-      continueOnError: true 
-      inputs:
-        command: init
-        backendType: azurerm
-        workingDirectory: $( TerraformDirectory )
-        backendServiceArm: $(ServiceConnectionName)
-        backendAzureRmResourceGroupName: $( TerraformStateStorageAccountResourceGroupName )
-        backendAzureRmStorageAccountName: $( TerraformStateStorageAccountName )
-        backendAzureRmContainerName: $( TerraformStateStorageAccountContainerName )
-        backendAzureRmKey: ${{ parameters.Environment }}.tfstate
-    - task: TerraformCLI@1
-      displayName: 'Terraform : plan'
-      inputs:
-        command: plan
-        workingDirectory: $( TerraformDirectory )
-        publishPlanResults: $(ServiceConnectionName)
-        environmentServiceName: $(ServiceConnectionName)
-        commandOptions: ${{ parameters.commandOptions }}
+- script: |
+    terraform init
+    terraform plan -out=terraform.tfplan
+  displayName: 'Terraform Plan'
