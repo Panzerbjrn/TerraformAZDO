@@ -5,12 +5,6 @@ terraform {
       version = "~> 3"
     }
   }
-  cloud {
-    organization = "Panzerbjrn"
-    workspaces {
-      name = "TerraformAZDO"
-    }
-  }
 }
 
 provider "azurerm" {
