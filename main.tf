@@ -5,6 +5,12 @@ terraform {
       version = "~> 3"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "tfclirg"
+    storage_account_name = "tfclisa"
+    container_name       = "tfclicont"
+    key                  = "terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
