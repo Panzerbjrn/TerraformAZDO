@@ -15,7 +15,7 @@ steps:
   inputs:
     terraformVersion: 'latest'
     terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
-- task: TerraformCLI@0
+- task: TerraformCLI@1
   displayName: 'check terraform version'
   inputs:
     command: version
