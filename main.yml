@@ -30,4 +30,5 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
+    commandOptions: '-out=terraform.tfplan'
     environmentServiceNameAzureRM: 'ARMConnection'
