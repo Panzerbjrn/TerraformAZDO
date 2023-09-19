@@ -27,5 +27,5 @@ steps:
 - task: TerraformTaskV4@4
   inputs:
     provider: 'azurerm'
-    command: 'plan'
+    command: 'plan -out=terraform.tfplan'
     environmentServiceNameAzureRM: 'ARMConnection'
