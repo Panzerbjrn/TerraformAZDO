@@ -18,5 +18,14 @@ steps:
 - task: TerraformTaskV4@4
   inputs:
     provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'ARMConnection'
+    backendAzureRmResourceGroupName: 'terraformazdorg'
+    backendAzureRmStorageAccountName: 'terraformazdosa'
+    backendAzureRmContainerName: 'terraformazdocont'
+    backendAzureRmKey: 'terraform.tfstate'
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'azurerm'
     command: 'plan'
     environmentServiceNameAzureRM: 'ARMConnection'
