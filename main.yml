@@ -6,7 +6,7 @@ trigger:
       - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 steps:
 
@@ -15,7 +15,6 @@ steps:
   inputs:
     terraformVersion: '1.5.6'
     terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
-
   - task: TerraformTaskV4@4
     inputs:
       provider: 'azurerm'
