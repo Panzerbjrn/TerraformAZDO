@@ -16,6 +16,7 @@ steps:
     terraformVersion: '1.5.6'
     terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
 - task: TerraformTaskV4@4
+  displayName: "Init Terraform"
   inputs:
     provider: 'azurerm'
     command: 'init'
@@ -25,7 +26,8 @@ steps:
     backendAzureRmContainerName: 'terraformazdocont'
     backendAzureRmKey: 'terraform.tfstate'
 - task: TerraformTaskV4@4
+  displayName: "Plan Terraform"
   inputs:
     provider: 'azurerm'
-    command: 'plan -out=terraform.tfplan'
+    command: 'plan'
     environmentServiceNameAzureRM: 'ARMConnection'
