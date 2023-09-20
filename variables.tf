@@ -5,7 +5,3 @@ variable "location" {
 variable "prefix" {
   type = string
 }
-
-variable "tfkey" {
-  type = string
-}
