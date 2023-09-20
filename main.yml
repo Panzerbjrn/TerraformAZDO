@@ -53,12 +53,12 @@ steps:
   inputs:
     command: 'plan'
     environmentServiceName: 'ARMConnection'
-    commandOptions: "-out=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan -var'tfkey=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan'"
+    commandOptions: "-out=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan -var='tfkey=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan'"
     allowTelemetryCollection: true
     publishPlanResults: "${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan"
 - task: TerraformCLI@1
   displayName: "Terraform Apply"
   inputs:
     command: 'apply'
-    commandOptions: "-var'tfkey=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan'"
+    commandOptions: "-var#'tfkey=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan'"
     allowTelemetryCollection: true
