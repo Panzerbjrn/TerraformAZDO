@@ -54,7 +54,7 @@ steps:
   inputs:
     command: 'plan'
     environmentServiceName: 'ARMConnection'
-    commandOptions: "-input=false -out=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan -var=tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"
+    commandOptions: "-input=false -out=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan -var='tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan'"
     allowTelemetryCollection: true
     publishPlanResults: "${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"
 - task: TerraformCLI@1
