@@ -12,7 +12,7 @@ parameters:
 - name : Environment
   displayName: Environment to deploy.
   type: string
-  default: Dev
+  default: QA
   values:
   - Dev
   - Staging
@@ -21,7 +21,9 @@ parameters:
 - name : CustomerID
   displayName: Customer ID of the client.
   type: string
-  default: '0888'
+  default: '0088'
+
+
 
 steps:
 - task:  ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
@@ -44,18 +46,19 @@ steps:
     backendAzureRmResourceGroupLocation: 'westeurope'
     backendAzureRmStorageAccountName: 'tfclisa'
     backendAzureRmContainerName: 'tfclicont'
-    backendAzureRmKey:  "terraform.tfstate"
+    backendAzureRmKey:  "${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfstate"
     allowTelemetryCollection: true
 - task: TerraformCLI@1
   displayName: "Terraform Plan"
   inputs:
     command: 'plan'
     environmentServiceName: 'ARMConnection'
-    commandOptions: "-out=terraform.tfplan"
+    commandOptions: "-out=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan -var='tfkey=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan'"
     allowTelemetryCollection: true
-    publishPlanResults: "terraform.tfplan"
+    publishPlanResults: "${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan"
 - task: TerraformCLI@1
   displayName: "Terraform Apply"
   inputs:
     command: 'apply'
+    commandOptions: "-out=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan -var='tfkey=${{ parameters.CustomerID }}.${{ parameters.Environment }}.terraform.tfplan'"
     allowTelemetryCollection: true
