@@ -18,7 +18,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "resoucegroup" {
-  name = "TerraformAZDO"
+  name = "TerraformAZDO-v1"
   location = var.location
 }
 
