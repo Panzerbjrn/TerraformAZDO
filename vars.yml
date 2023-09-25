@@ -1,0 +1,5 @@
+# File: vars.yml
+variables:
+  VarsVar1: 'VarsVar1valueaddedtext'
+  VarsVar2: 'VarsVar2valueaddedtext'
+  VarsVar3: 'VarsVar3valueaddedtext'
