@@ -1,4 +1,4 @@
-name: "Terraform Plan"
+name: "Terraform Using Tasks"
 
 trigger:
   branches:
@@ -9,6 +9,13 @@ pool:
   vmImage: 'windows-latest'
 
 parameters:
+- name : Region
+  displayName: Which region to deploy to.
+  type: string
+  default: 'West Europe'
+  values:
+  - 'Germany West Central'
+  - 'West Europe'
 - name : Environment
   displayName: Environment to deploy.
   type: string
@@ -23,43 +30,78 @@ parameters:
   type: string
   default: '0088'
 
+variables:
+- template: vars.yml  # Template reference  
+- group: GlobalVariables
+- group: Group-1
+- group: Group-2
 
-
-steps:
-- task:  ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-  displayName: "Install Terraform"
-  inputs:
-    terraformVersion: 'latest'
-    terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
-- task: TerraformCLI@1
-  displayName: 'check terraform version'
-  inputs:
-    command: version
-- task: TerraformCLI@1
-  displayName: "Terraform Init"
-  inputs:
-    command: 'init'
-    commandOptions: "-input=false"
-    backendType: 'azurerm'
-    backendServiceArm: 'ARMConnection'
-    ensureBackend: true
-    backendAzureRmResourceGroupName: 'tfclirg'
-    backendAzureRmResourceGroupLocation: 'westeurope'
-    backendAzureRmStorageAccountName: 'tfclisa'
-    backendAzureRmContainerName: 'tfclicont'
-    backendAzureRmKey:  "${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfstate"
-    allowTelemetryCollection: true
-- task: TerraformCLI@1
-  displayName: "Terraform Plan"
-  inputs:
-    command: 'plan'
-    environmentServiceName: 'ARMConnection'
-    commandOptions: '-input=false -out=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan -var="tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"'
-    allowTelemetryCollection: true
-    publishPlanResults: "${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"
-- task: TerraformCLI@1
-  displayName: "Terraform Apply"
-  inputs:
-    command: 'apply'
-    commandOptions: '-input=false -var="tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"'
-    allowTelemetryCollection: true
+stages:
+- stage: Stage1
+  displayName: "Stage 1"
+  jobs:
+  - job: 'echoVariables'
+    strategy:
+      maxParallel: 2
+    steps:
+    - script: |
+        echo Buildnumber $(Build.BuildNumber)
+      displayName: 'echo Build.BuildNumber'
+    - script: |
+        echo VarsVar1 is ${{ variables.VarsVar1 }}
+        echo VarsVar2 is $(VarsVar2)
+      displayName: 'echo vars.yml'
+    - script: |
+        echo VMAdminPWD $(VMAdminPWD)
+        echo AzSubscriptionID $(AzSubscriptionID)
+        echo ServiceConnectionName $(ServiceConnectionName)
+        echo TestVar1 $(TestVar1)
+        echo TestVar2 $(TestVar2)
+      displayName: 'echo Library Groups'
+    - script: |
+        echo Region is ${{ parameters.Region }}
+        echo Environment is ${{ parameters.Environment }}
+        echo lowerEnvironment is ${{ lower(parameters.Environment) }}
+      displayName: 'echo parameters'
+- stage: Stage2
+  displayName: "Stage 2"
+  jobs:
+  - job: 'TerraformPlan'
+    steps:
+    - task:  ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+      displayName: "Install Terraform"
+      inputs:
+        terraformVersion: 'latest'
+        terraformDownloadLocation: 'https://releases.hashicorp.com/terraform'
+    - task: TerraformCLI@1
+      displayName: 'check terraform version'
+      inputs:
+        command: version
+    - task: TerraformCLI@1
+      displayName: "Terraform Init"
+      inputs:
+        command: 'init'
+        commandOptions: "-input=false"
+        backendType: 'azurerm'
+        backendServiceArm: 'ARMConnection'
+        ensureBackend: true
+        backendAzureRmResourceGroupName: 'tfclirg'
+        backendAzureRmResourceGroupLocation: 'westeurope'
+        backendAzureRmStorageAccountName: 'tfclisa'
+        backendAzureRmContainerName: 'tfclicont'
+        backendAzureRmKey:  "${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfstate"
+        allowTelemetryCollection: true
+    - task: TerraformCLI@1
+      displayName: "Terraform Plan"
+      inputs:
+        command: 'plan'
+        environmentServiceName: 'ARMConnection'
+        commandOptions: '-input=false -out=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan -var="tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"'
+        allowTelemetryCollection: true
+        publishPlanResults: "${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"
+    - task: TerraformCLI@1
+      displayName: "Terraform Apply"
+      inputs:
+        command: 'apply'
+        commandOptions: '-input=false -var="tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"'
+        allowTelemetryCollection: true
