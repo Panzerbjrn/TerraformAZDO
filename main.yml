@@ -89,19 +89,19 @@ stages:
         backendAzureRmResourceGroupLocation: 'westeurope'
         backendAzureRmStorageAccountName: 'tfclisa'
         backendAzureRmContainerName: 'tfclicont'
-        backendAzureRmKey:  "testtffile.terraform.tfstate"
+        backendAzureRmKey:  "${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfstate"
         allowTelemetryCollection: true
     - task: TerraformCLI@1
       displayName: "Terraform Plan"
       inputs:
         command: 'plan'
         environmentServiceName: 'ARMConnection'
-        commandOptions: '-input=false -out=testtffile.terraform.tfplan -var="tfkey=testtffile.terraform.tfplan"'
+        commandOptions: '-input=false -out=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan -var="tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"'
         allowTelemetryCollection: true
-        publishPlanResults: "testtffile.terraform.tfplan"
+        publishPlanResults: "${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"
     - task: TerraformCLI@1
       displayName: "Terraform Apply"
       inputs:
         command: 'apply'
-        commandOptions: '-input=false -var="tfkey=testtffile.terraform.tfplan"'
+        commandOptions: '-input=false -var="tfkey=${{ parameters.CID }}.${{ parameters.Environment }}.terraform.tfplan"'
         allowTelemetryCollection: true
